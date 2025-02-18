@@ -10,14 +10,14 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 public class ModelConfiguration {
-    public static MultiLayerConfiguration createMultiLayerConfiguration() {
-        MultiLayerConfiguration build = new NeuralNetConfiguration.Builder()
+    public static MultiLayerConfiguration createMultiLayerConfiguration(int vocabSize) {
+        return new NeuralNetConfiguration.Builder()
                 .seed(123) // Set a random seed for reproducibility
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .weightInit(WeightInit.XAVIER)
                 .list()
                 .layer(0, new DenseLayer.Builder()
-                        .nIn(1000) // Number of input features
+                        .nIn(vocabSize) // Number of input features
                         .nOut(100) // Number of output neurons
                         .activation(Activation.RELU) // Activation function
                         .build())
@@ -27,6 +27,5 @@ public class ModelConfiguration {
                         .activation(Activation.SIGMOID) // Sigmoid for binary classification
                         .build())
                 .build();
-        return build;
     }
 }

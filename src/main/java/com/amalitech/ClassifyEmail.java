@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class ClassifyEmail {
     public static void main(String[] args) {
-        MultiLayerConfiguration multiLayerConfiguration = ModelConfiguration.createMultiLayerConfiguration();
+        MultiLayerConfiguration multiLayerConfiguration = ModelConfiguration.createMultiLayerConfiguration(1000);
         MultiLayerNetwork model = new MultiLayerNetwork(multiLayerConfiguration);
         model.init();
 

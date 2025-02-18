@@ -1,21 +1,16 @@
 package com.amalitech;
 
+import com.amalitech.model.ModelConfiguration;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.DenseLayer;
-import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
-import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +18,7 @@ import java.util.List;
 
 public class SpamDetection {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws java.io.FileNotFoundException, NumberFormatException {
         // Load and preprocess the dataset
         List<String> emails = new ArrayList<>();
         List<Integer> labels = new ArrayList<>();
@@ -35,7 +30,7 @@ public class SpamDetection {
             emails.add(parts[1].trim());
         }
 
-        // Tokenize and vectorize the emails
+        // Tokenize and vectorized the emails
         DefaultTokenizerFactory tokenizerFactory = new DefaultTokenizerFactory();
         int vocabSize = 1000; // Adjust as needed
         INDArray features = Nd4j.create(emails.size(), vocabSize);
@@ -60,21 +55,7 @@ public class SpamDetection {
         normalizer.transform(dataSet);
 
         // Configure and train the model
-        MultiLayerConfiguration configuration = new NeuralNetConfiguration.Builder()
-                .seed(123)
-                .weightInit(WeightInit.XAVIER)
-                .list()
-                .layer(0, new DenseLayer.Builder()
-                        .nIn(vocabSize)
-                        .nOut(100)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(1, new OutputLayer.Builder(LossFunctions.LossFunction.XENT)
-                        .nIn(100)
-                        .nOut(1)
-                        .activation(Activation.SIGMOID)
-                        .build())
-                .build();
+        MultiLayerConfiguration configuration = ModelConfiguration.createMultiLayerConfiguration(1000);
 
         MultiLayerNetwork model = new MultiLayerNetwork(configuration);
         model.init();
